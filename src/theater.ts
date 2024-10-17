@@ -1,60 +1,66 @@
 class Seat {
-    constructor(public number: string, public isAvailable: boolean) {}
+    constructor(public identifier: string, public isAvailable: boolean) {}
 }
 
 class Theater {
-    private seats: Seat[];
+    private seats: Seat[][];
 
-    constructor(seatCount: number) {
-        this.seats = Array.from({ length: seatCount }, (_, index) => 
-            new Seat((index + 1).toString(), true)
+    constructor(rowCount: number, columnCount: number) {
+        this.seats = Array.from({ length: rowCount }, (_, rowIndex) => 
+            Array.from({ length: columnCount }, (_, colIndex) => 
+                new Seat(`${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`, true)
+            )
         );
     }
 
     displaySeats(): void {
+        const columnHeaders = Array.from({ length: this.seats[0].length }, (_, colIndex) => colIndex + 1).join("  ");
         console.log("Seat Availability:");
-        this.seats.forEach(seat => {
-            const status = seat.isAvailable ? "Available" : "Booked";
-            console.log(`Seat ${seat.number}: ${status}`);
+        console.log("    " + columnHeaders);
+        
+        this.seats.forEach((row, rowIndex) => {
+            const rowDisplay = row.map(seat => seat.isAvailable ? "-" : "B").join("  ");
+            console.log(`${String.fromCharCode(65 + rowIndex)} | ${rowDisplay}`);
         });
-
-        console.log("----------------")
+        
+        console.log("----------------");
     }
 
-    selectSeat(seatNumber: string): string {
-        const seat = this.seats.find(s => s.number === seatNumber);
+    selectSeat(seatIdentifier: string): string {
+        const seat = this.findSeat(seatIdentifier);
         if (!seat) return "Seat not found.";
         if (!seat.isAvailable) return "Seat is already booked.";
 
         seat.isAvailable = false;
-        return `Seat ${seat.number} booked successfully! \n --------------------`;
+        return `Seat ${seat.identifier} booked successfully! \n --------------------`;
     }
 
-    cancelSeat(seatNumber: string): string {
-        const seat = this.seats.find(s => s.number === seatNumber)
+    cancelSeat(seatIdentifier: string): string {
+        const seat = this.findSeat(seatIdentifier);
         if (!seat) return "Seat not found.";
-
         if (seat.isAvailable) return "Seat is not booked.";
 
         seat.isAvailable = true;
-        return `Seat ${seat.number} booking cancelled successfully! \n --------------`;
+        return `Seat ${seat.identifier} booking cancelled successfully! \n --------------`;
+    }
 
+    private findSeat(identifier: string): Seat | undefined {
+        for (const row of this.seats) {
+            const seat = row.find(s => s.identifier === identifier);
+            if (seat) return seat;
+        }
+        return undefined;
     }
 }
 
-
-const theater = new Theater(100);
+const theater = new Theater(3, 5);
 theater.displaySeats();
 
-
-console.log(theater.selectSeat("5"));
+console.log(theater.selectSeat("A5"));
 theater.displaySeats();
 
+console.log(theater.selectSeat("A5"));
+theater.displaySeats();
 
-console.log(theater.selectSeat("5"));
-theater.displaySeats()
-
-theater.cancelSeat('5')
-theater.displaySeats()
-
-
+theater.cancelSeat("A5");
+theater.displaySeats();

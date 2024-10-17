@@ -4,7 +4,7 @@ class Hotel {
         this.rooms = [
             { id: 1, price: 100, available: true },
             { id: 2, price: 150, available: true },
-            { id: 3, price: 200, available: false },
+            { id: 3, price: 200, available: true },
         ];
     }
     checkAvailability(roomId) {

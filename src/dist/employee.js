@@ -20,4 +20,5 @@ class EmployeeManager {
 }
 const empManager = new EmployeeManager();
 empManager.addEmployee("Basith", "basith@example.com", "123");
+empManager.addEmployee("jnj", "basith@example.com", "123");
 console.log(empManager.getEmployees());
