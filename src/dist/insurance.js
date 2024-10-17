@@ -46,4 +46,4 @@ const insuranceParams = {
     coverageAmount: 150000,
 };
 const premium = InsuranceCalculator.calculatePremium(insuranceParams);
-console.log(`Calculated Premium: $${premium}`);
+console.log(`Calculated Premium: ₹${premium}`);
